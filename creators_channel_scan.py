@@ -2,7 +2,7 @@ import logging
 from itertools import chain
 
 import pandas as pd
-from pytube import Channel
+import scrapetube
 
 from similarity_measure import TextSimilarityMeasures
 
@@ -39,14 +39,24 @@ class CreatorsScanMain:
         TODO:
         """
         try:
-            c = Channel(self.channel_link)
+            # c = Channel(self.channel_link)
+            # df = pd.DataFrame()
+            # urls = []
+            # for url in c.video_urls:
+            #     urls.append(url)
+            # df["url"] = urls
+            # # keep only top 10 rows
+            # df = df.head(1)
+            # df.to_csv("creators_channel_scan.csv", index=False)
+            # return df
+            videos = scrapetube.get_channel(channel_url=self.channel_link)
             df = pd.DataFrame()
             urls = []
-            for url in c.video_urls:
-                urls.append(url)
+            for video in videos:
+                id = video["videoId"]
+                url = "https://www.youtube.com/watch?v=" + str(id)
+                urls.append(id)
             df["url"] = urls
-            # keep only top 10 rows
-            df = df.head(1)
             df.to_csv("creators_channel_scan.csv", index=False)
             return df
         except Exception as e:
